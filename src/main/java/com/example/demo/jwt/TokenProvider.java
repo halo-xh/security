@@ -1,17 +1,19 @@
 package com.example.demo.jwt;
 
+import com.example.demo.service.UserTokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -20,11 +22,15 @@ import java.util.stream.Collectors;
  * description
  */
 
+@Component
 public class TokenProvider {
     
     private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
     
     private Key key = Keys.hmacShaKeyFor("key".getBytes());//todo.
+
+    @Autowired
+    private UserTokenService userTokenService;
     
     public boolean validateToken(String jwt) {
         try {

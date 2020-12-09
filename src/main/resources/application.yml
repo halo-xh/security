@@ -1,8 +1,5 @@
 server:
   port: 8011
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql:///oauth2
-    username: root
-    password: 123456
+  profiles:
+    active: dev

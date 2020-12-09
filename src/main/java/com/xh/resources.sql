@@ -52,4 +52,16 @@ CREATE TABLE `subject_login`  (
   UNIQUE INDEX `uk_username`(`loginname`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
+-- ----------------------------
+-- Table structure for login_token
+-- ----------------------------
+DROP TABLE IF EXISTS `login_token`;
+CREATE TABLE `login_token`  (
+  `tid` int(4) NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'login name',
+  `createdt` datetime(0) NOT NULL ON UPDATE CURRENT_TIMESTAMP(0),
+  PRIMARY KEY (`tid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
 SET FOREIGN_KEY_CHECKS = 1;

@@ -25,7 +25,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="SubjectLogin对象", description="")
+@ApiModel(value="SubjectLogin对象", description="store login user details")
 public class SubjectLogin implements Serializable {
 
     private static final long serialVersionUID = 1L;

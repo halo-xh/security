@@ -1,20 +1,26 @@
 spring:
+  application:
+    name: security-demo
   datasource:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/myblog?serverTimezone=GMT%2b8&useSSL=false
+    url: jdbc:mysql://localhost:3306/securitydemo?serverTimezone=GMT%2b8&useSSL=false
+    type: com.zaxxer.hikari.HikariDataSource
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
 mybatis-plus:
-#configuration:
-#log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.xh.domain
+  mapper-locations: classpath:mappers/*.xml
+  #configuration:
+  #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
-    db-config:
-      #逻辑删除 配置
+    db-config: #逻辑删除 配置
       logic-delete-value: Y
       logic-not-delete-value: N
+
+
 
 
 

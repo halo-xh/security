@@ -30,7 +30,7 @@ public class CodeGenerator {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath + "\\src\\main\\java");
+        gc.setOutputDir("C:\\Users\\82795\\Desktop\\SBSec\\src\\main\\java");
         gc.setAuthor("Xiao Hong");
         gc.setFileOverride(false);//覆盖配置
         gc.setServiceName("%sService");// 去Service I 前缀
@@ -63,7 +63,7 @@ public class CodeGenerator {
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("resources","subject_login");//todo. 设置 要 generate 的表
+        strategy.setInclude("login_token");//todo. 设置 要 generate 的表
         strategy.setNaming(NamingStrategy.underline_to_camel);// 下划线转驼峰命名
         strategy.setColumnNaming(NamingStrategy.underline_to_camel); //列 驼峰
         strategy.setEntityLombokModel(true); // lombok 注解

@@ -1,6 +1,6 @@
 package com.xh.jwt;
 
-import com.xh.service.UserTokenService;
+import com.xh.service.LoginTokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.security.Key;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -27,10 +28,10 @@ public class TokenProvider {
     
     private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
     
-    private Key key = Keys.hmacShaKeyFor("key".getBytes());//todo.
+    private Key key = Keys.hmacShaKeyFor("kllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllley".getBytes());//todo.
 
     @Autowired
-    private UserTokenService userTokenService;
+    private LoginTokenService userTokenService;
     
     public boolean validateToken(String jwt) {
         try {
@@ -57,8 +58,8 @@ public class TokenProvider {
     
     private boolean validateUserToken(Claims jwtBody, String authToken) {
         String loginMethodAndId = jwtBody.getSubject();
-        TokenType tokenType = TokenType.valueOf(String.valueOf(jwtBody.get(TokenPayload.TOKEN_TYPE)));
-        boolean existsUserToken = userTokenService.existsUserToken(loginMethodAndId, tokenType, authToken); //todo. chk in db
+        String username = String.valueOf(jwtBody.get("login_name"));
+        boolean existsUserToken = userTokenService.existsUserToken(username, authToken); //todo. chk in db
         if (!existsUserToken) {
             SecurityContextHolder.clearContext();
             log.info("User session token not found in database for {}, probably logged out by another session.", loginMethodAndId);
@@ -66,64 +67,22 @@ public class TokenProvider {
         return existsUserToken;
     }
     
-    private String buildToken(Authentication authentication, Date validity, TokenType tokenType){
+    private String buildToken(Authentication authentication, Date validity){
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-        
-        String authMethod = ""; //
-        String subjectUUId = "";//
-        
+        String principal = (String) authentication.getPrincipal();
+
         return Jwts.builder()
-                .setSubject("loginmethod/loginName")
-                .claim("auth", authorities).claim(TokenPayload.SUBJECT_UUID, subjectUUId)
-                .claim(TokenPayload.TOKEN_TYPE, tokenType)
+                .setSubject("loginName")
+                .claim("auth", authorities)
+                .claim(TokenPayload.USERNAME, principal)
                 .signWith(key, SignatureAlgorithm.HS512).setExpiration(validity).compact();
     }
     
-    public enum TokenType {
-        ACCESS_TOKEN, SESSION_TOKEN
-    }
-    
-    
-    public class TokenPayload {
+
+    private static class TokenPayload{
         
-        public static final String SUBJECT_UUID = "subjectUUID";
-        
-        public static final String TOKEN_TYPE = "tokenType";
-        
-        private static final long serialVersionUID = 1L;
-        
-        /**
-         * Database Id of subject, different from login name
-         */
-        private String subjectUUID;
-        
-        private String tokenType;
-        
-        /**
-         * Get Database Id of subject, different from login name
-         *
-         * @return Database Id of subject
-         */
-        public String getSubjectUUID() {
-            return subjectUUID;
-        }
-        
-        public String getTokenType() {
-            return tokenType;
-        }
-        
-        public TokenPayload subjectUUID(String subjectUUID) {
-            this.subjectUUID = subjectUUID;
-            return this;
-        }
-        
-        public TokenPayload tokenType(String subjectUUID, String tokenType) {
-            this.subjectUUID = subjectUUID;
-            this.tokenType = tokenType;
-            return this;
-        }
-        
-        
+        public static final String USERNAME = "username";
+
     }
 }

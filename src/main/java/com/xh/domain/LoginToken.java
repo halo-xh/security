@@ -5,7 +5,6 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotation.Version;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
@@ -25,31 +24,21 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Resources对象", description="store resources")
-public class Resources implements Serializable {
+@ApiModel(value="LoginToken对象", description="store token")
+public class LoginToken implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "rid", type = IdType.ID_WORKER)
-    private Integer rid;
+    @TableId(value = "tid", type = IdType.ID_WORKER)
+    private Integer tid;
 
-    private String resname;
+    private String token;
 
-    private String restype;
-
-    private String status;
+    @ApiModelProperty(value = "login name")
+    private String user;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createdt;
-
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updatedt;
-
-    @Version
-    private Integer version;
-
-    @TableLogic
-    private String deleted;
 
 
 }

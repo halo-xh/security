@@ -13,8 +13,8 @@ mybatis-plus:
   global-config:
     db-config:
       #逻辑删除 配置
-      logic-delete-value: 1
-      logic-not-delete-value: 0
+      logic-delete-value: Y
+      logic-not-delete-value: N
 
 
 

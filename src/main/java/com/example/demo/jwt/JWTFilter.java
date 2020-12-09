@@ -1,6 +1,5 @@
 package com.example.demo.jwt;
 
-import com.example.demo.jwt.TokenProvider;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

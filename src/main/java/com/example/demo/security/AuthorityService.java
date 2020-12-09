@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.security;
 
 import org.springframework.security.authentication.jaas.AuthorityGranter;
 

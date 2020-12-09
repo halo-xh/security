@@ -6,6 +6,7 @@ import com.example.demo.security.DBAuthenticationProvider;
 import com.example.demo.security.MyUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -52,6 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private HttpSessionCsrfTokenRepository httpSessionCsrfTokenRepository;
 
     @Resource
+    @Qualifier("logoutSuccessHandler")
     private HttpStatusReturningLogoutSuccessHandler logoutSuccessHandler;
 
     @Resource
@@ -108,5 +110,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public HttpStatusReturningLogoutSuccessHandler logoutSuccessHandler() {
         return new HttpStatusReturningLogoutSuccessHandler();
     }
-
+    
 }

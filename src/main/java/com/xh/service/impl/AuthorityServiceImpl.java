@@ -12,6 +12,7 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
@@ -77,8 +78,9 @@ public class AuthorityServiceImpl implements AuthorityService {
     
     @Override
     public Collection<GrantedAuthority> getGrantedAuthorityByLoginName(String loginName) {
-        
-        return null;
+        // get user role
+        // pack role. 1,2,34,5...
+        return  AuthorityUtils.commaSeparatedStringToAuthorityList("1,2,34,5...".toString());
     }
     
     //[POST]/api/test

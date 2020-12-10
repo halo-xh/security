@@ -5,6 +5,7 @@ import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.interceptor.NameMatchTransactionAttributeSource;
@@ -20,6 +21,7 @@ import java.util.Map;
  * AOP 事务 配置
  */
 @Configuration
+@EnableAspectJAutoProxy
 public class TxAdviceInterceptor {
 	
 	private static final String AOP_POINTCUT_EXPRESSION = "execution(* *..service.*Service+.*(..))";

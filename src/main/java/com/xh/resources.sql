@@ -64,4 +64,18 @@ CREATE TABLE `login_token`  (
   PRIMARY KEY (`tid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
+-- ----------------------------
+-- Table structure for res2res
+-- ----------------------------
+CREATE TABLE `securitydemo`.`res2res` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'table id',
+  `resid` INT NOT NULL COMMENT 'resource id: function, resource',
+  `parentid` INT NOT NULL COMMENT 'resource id : function , role',
+  `createdt` DATETIME NOT NULL,
+  `updatedt` DATETIME NOT NULL,
+  `version` INT NOT NULL,
+  PRIMARY KEY (`id`))
+COMMENT = 'mapping table: role -function, function - resource';
+
+
 SET FOREIGN_KEY_CHECKS = 1;

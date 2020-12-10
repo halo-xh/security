@@ -1,5 +1,6 @@
 package com.xh.security;
 
+import com.xh.service.AuthorityService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

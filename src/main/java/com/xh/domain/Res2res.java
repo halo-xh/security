@@ -5,7 +5,6 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotation.Version;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
@@ -16,31 +15,29 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ * mapping table: role -function, function - resource
  * </p>
  *
  * @author Xiao Hong
- * @since 2020-12-09
+ * @since 2020-12-10
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Resources对象", description="store resources")
-public class Resources implements Serializable {
+@ApiModel(value="Res2res对象", description="mapping table: role -function, function - resource")
+public class Res2res implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "rid", type = IdType.ID_WORKER)
-    private Integer rid;
+    @ApiModelProperty(value = "table id")
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
-    private String resname;
+    @ApiModelProperty(value = "resource id: function, resource")
+    private Integer resid;
 
-    private String restype;
-
-    private String status;
-    
-    @ApiModelProperty(value = "resource api path. function and role are null")
-    private String path;
+    @ApiModelProperty(value = "resource id : function , role")
+    private Integer parentid;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createdt;
@@ -50,9 +47,6 @@ public class Resources implements Serializable {
 
     @Version
     private Integer version;
-
-    @TableLogic
-    private String deleted;
 
 
 }

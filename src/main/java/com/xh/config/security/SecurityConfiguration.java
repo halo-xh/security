@@ -3,7 +3,7 @@ package com.xh.config.security;
 import com.xh.jwt.JWTFilter;
 import com.xh.service.AuthorityService;
 import com.xh.security.DBAuthenticationProvider;
-import com.xh.security.MyUserDetailsService;
+import com.xh.service.MyUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,4 +1,4 @@
-package com.xh.security;
+package com.xh.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,11 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  * description
  */
 
-public class MyUserDetailsService implements UserDetailsService {
+public interface MyUserDetailsService extends UserDetailsService {
 
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
-    }
 }

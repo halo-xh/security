@@ -12,5 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2020-12-09
  */
 public interface SubjectLoginMapper extends BaseMapper<SubjectLogin> {
+    
+    SubjectLogin selectByLoginName(String name);
 
 }

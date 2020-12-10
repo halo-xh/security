@@ -2,6 +2,7 @@ package com.xh.service;
 
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.jaas.AuthorityGranter;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.security.Principal;
@@ -19,5 +20,7 @@ import java.util.Set;
 public interface AuthorityService {
     
     Map<RequestMatcher, Collection<ConfigAttribute>> initAuthorityMap(boolean permitAllUrl, List<String> whiteUrlList);
+    
+    Collection<GrantedAuthority> getGrantedAuthorityByLoginName(String loginName);
     
 }

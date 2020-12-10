@@ -1,7 +1,5 @@
 package com.xh.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.xh.common.MyConstants;
 import com.xh.config.security.PermitAllConfigAtrribute;
 import com.xh.domain.Res2res;
@@ -13,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -36,7 +36,7 @@ public class AuthorityServiceImpl implements AuthorityService {
         // white url
         if (whiteUrlList != null) {
             for (String url : whiteUrlList) {
-                if (StringUtils.isNotEmpty(url)) {
+                if (!StringUtils.isEmpty(url)) {
                     AntPathRequestMatcher urlMatcher = new AntPathRequestMatcher(url);
                     List<ConfigAttribute> configAttList = new ArrayList<>();
                     ConfigAttribute configAtt = new PermitAllConfigAtrribute();
@@ -73,6 +73,12 @@ public class AuthorityServiceImpl implements AuthorityService {
         }
         
         return map;
+    }
+    
+    @Override
+    public Collection<GrantedAuthority> getGrantedAuthorityByLoginName(String loginName) {
+        
+        return null;
     }
     
     //[POST]/api/test

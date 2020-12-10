@@ -63,7 +63,7 @@ public class CodeGenerator {
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("res2res");//todo. 设置 要 generate 的表
+        strategy.setInclude("user2role");//todo. 设置 要 generate 的表
         strategy.setNaming(NamingStrategy.underline_to_camel);// 下划线转驼峰命名
         strategy.setColumnNaming(NamingStrategy.underline_to_camel); //列 驼峰
         strategy.setEntityLombokModel(true); // lombok 注解

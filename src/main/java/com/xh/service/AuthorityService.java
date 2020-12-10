@@ -21,6 +21,6 @@ public interface AuthorityService {
     
     Map<RequestMatcher, Collection<ConfigAttribute>> initAuthorityMap(boolean permitAllUrl, List<String> whiteUrlList);
     
-    Collection<GrantedAuthority> getGrantedAuthorityByLoginName(String loginName);
+    Collection<GrantedAuthority> getGrantedAuthorityByLoginName(Integer loginName);
     
 }

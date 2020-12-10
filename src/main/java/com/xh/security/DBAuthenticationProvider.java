@@ -38,9 +38,10 @@ public class DBAuthenticationProvider extends DaoAuthenticationProvider {
         }
         String loginname = ((LoginUser) userDetails).getLoginname();
         String presentedPassword = authentication.getCredentials().toString();
-        if (this.passwordEncoder.matches(presentedPassword, userDetails.getPassword())) {
+        if (this.getPasswordEncoder().matches(presentedPassword, userDetails.getPassword())) {
             // may expire check.todo
-            Collection<GrantedAuthority> authorities = authorityService.getGrantedAuthorityByLoginName(loginname);
+            
+            Collection<GrantedAuthority> authorities = authorityService.getGrantedAuthorityByLoginName(((LoginUser) userDetails).getSid());
             ((LoginUser) userDetails).setAuthorities(authorities);
             return;
         }

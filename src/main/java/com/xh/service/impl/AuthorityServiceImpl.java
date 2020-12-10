@@ -4,8 +4,11 @@ import com.xh.common.MyConstants;
 import com.xh.config.security.PermitAllConfigAtrribute;
 import com.xh.domain.Res2res;
 import com.xh.domain.Resources;
+import com.xh.domain.User2role;
 import com.xh.mapper.Res2resMapper;
 import com.xh.mapper.ResourcesMapper;
+import com.xh.mapper.SubjectLoginMapper;
+import com.xh.mapper.User2roleMapper;
 import com.xh.service.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
@@ -18,6 +21,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Xiao Hong on 2020-12-10
@@ -29,6 +33,12 @@ public class AuthorityServiceImpl implements AuthorityService {
     
     @Autowired
     private Res2resMapper res2resMapper;
+    
+    @Autowired
+    private User2roleMapper user2roleMapper;
+    
+    @Autowired
+    private SubjectLoginMapper subjectLoginMapper;
     
     @Override
     public Map<RequestMatcher, Collection<ConfigAttribute>> initAuthorityMap(boolean permitAllUrl, List<String> whiteUrlList) {
@@ -77,10 +87,12 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
     
     @Override
-    public Collection<GrantedAuthority> getGrantedAuthorityByLoginName(String loginName) {
+    public Collection<GrantedAuthority> getGrantedAuthorityByLoginName(Integer userId) {
         // get user role
+        List<User2role> user2roleList = user2roleMapper.getByUserId(userId);//
+        String roles = user2roleList.stream().map(User2role::getRoleid).map(String::valueOf).collect(Collectors.joining(","));
         // pack role. 1,2,34,5...
-        return  AuthorityUtils.commaSeparatedStringToAuthorityList("1,2,34,5...".toString());
+        return  AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
     }
     
     //[POST]/api/test

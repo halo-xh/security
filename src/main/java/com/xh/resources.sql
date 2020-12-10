@@ -20,21 +20,20 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for resources
 -- ----------------------------
-DROP TABLE IF EXISTS `resources`;
-CREATE TABLE `resources`  (
+CREATE TABLE `resources` (
   `rid` int(4) NOT NULL,
   `resname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `restype` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+   `path` varchar(255) DEFAULT NULL,
   `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'A',
-  `createdt` datetime(0) NOT NULL,
-  `updatedt` datetime(0) NOT NULL ON UPDATE CURRENT_TIMESTAMP(0),
+  `createdt` datetime NOT NULL,
+  `updatedt` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `version` int(4) NOT NULL,
   `deleted` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'N',
   PRIMARY KEY (`rid`) USING BTREE,
-  UNIQUE INDEX `res_uk_resname`(`resname`) USING BTREE,
-  UNIQUE INDEX `res_uk_name_type`(`resname`, `restype`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
-
+  UNIQUE KEY `res_uk_resname` (`resname`) USING BTREE,
+  UNIQUE KEY `res_uk_name_type` (`resname`,`restype`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT
 -- ----------------------------
 -- Table structure for subject_login
 -- ----------------------------
@@ -76,6 +75,20 @@ CREATE TABLE `securitydemo`.`res2res` (
   `version` INT NOT NULL,
   PRIMARY KEY (`id`))
 COMMENT = 'mapping table: role -function, function - resource';
+
+-- ----------------------------
+-- Table structure for user2role
+-- ----------------------------
+CREATE TABLE `securitydemo`.`user2role` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userid` INT NOT NULL,
+  `roleid` INT NOT NULL,
+  `createdt` DATETIME NOT NULL,
+  `updatedt` DATETIME NOT NULL,
+  `version` INT NOT NULL,
+  PRIMARY KEY (`id`))
+COMMENT = 'user mapping role.';
+
 
 
 SET FOREIGN_KEY_CHECKS = 1;

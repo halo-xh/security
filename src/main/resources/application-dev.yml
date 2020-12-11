@@ -27,7 +27,7 @@ app:
       valid-second-rem: 36000
     security:
       permit-all: false
-      white-url:
+      white-url: /blog/subject-login/authenticate
 
 
 

@@ -3,6 +3,7 @@ package com.xh.config.mp;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -30,7 +31,7 @@ public class SwaggerConfig {
     public Docket docket(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
-                .groupName("mysite")
+//                .groupName("xh")
                 .enable(true)  // 启用 默认true
                 .select()
                 //扫描类注解为 @RestController
@@ -38,9 +39,9 @@ public class SwaggerConfig {
                 //扫描方法注解为 @PostMapping
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(PostMapping.class))
                 //基于包扫描
-                .apis(RequestHandlerSelectors.basePackage("com.xh.mysite.rest"))
+                .apis(RequestHandlerSelectors.basePackage("com.xh"))
                     //扫描的路径
-                    //.paths(PathSelectors.ant("/api/**"))
+                    .paths(PathSelectors.ant("/api/**"))
                 .build()
                 ;
     }

@@ -36,9 +36,10 @@ public class URIFilterInvocationSecurityMetaSource implements FilterInvocationSe
         add("/index.html");
         add("/api/logout");
         add("/favicon.ico");
-        add("/blog/subject-login/authenticate");
-        add("/swagger-resources/**");
-        add("/swagger-ui/index.html");
+        add("/api/subject-login/authenticate"); // login path
+        add("/swagger-resources/**"); //swagger
+        add("/v2/api-docs");
+        add("/swagger-ui.html");
     }};
     
     @Value("${app.config.security.permit-all}")

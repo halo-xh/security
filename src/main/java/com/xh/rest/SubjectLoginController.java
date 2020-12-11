@@ -54,6 +54,7 @@ public class SubjectLoginController {
         try {
             authentication = createAuthentication(loginVM);
         }catch (Exception e){
+            e.printStackTrace();
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add("errorCode", "801");
             httpHeaders.add("error", e.getLocalizedMessage());
@@ -81,10 +82,11 @@ public class SubjectLoginController {
     }
     
     private Authentication createAuthentication(LoginVM loginVM) {
+        System.out.println(loginVM);
          UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginVM.getUsername(),loginVM.getPassword());
         Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
-        loginVM.setPassword(new char[] {});
+        loginVM.setPassword(null);
         return authentication;
     }
     

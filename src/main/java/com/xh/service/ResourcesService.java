@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author Xiao Hong
  * @since 2020-12-09
  */
-public interface ResourcesService {
+public interface ResourcesService extends IService<Resources>{
 
 }

@@ -18,6 +18,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Xiao Hong on 2020-12-10
  */
+@Service
 public class AuthorityServiceImpl implements AuthorityService {
     
     @Autowired

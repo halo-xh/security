@@ -19,6 +19,16 @@ mybatis-plus:
     db-config: #逻辑删除 配置
       logic-delete-value: Y
       logic-not-delete-value: N
+app:
+  config:
+    jwt:
+      key: 4BhYGpEnjaYZ446rDeRKhQofxZuHt13OPxd7FVUF9g5QWVtAVvZ8+ldGlxOLs36cVyLHebeE2XXs1/bjpv28iQ==
+      valid-second: 3600
+      valid-second-rem: 36000
+    security:
+      permit-all: false
+      white-url:
+
 
 
 

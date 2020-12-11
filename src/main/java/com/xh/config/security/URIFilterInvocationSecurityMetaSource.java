@@ -21,10 +21,10 @@ public class URIFilterInvocationSecurityMetaSource implements FilterInvocationSe
     @Autowired
     private AuthorityService authorityService;
     
-    @Value("app.url.white")
+    @Value("${app.config.security.white-url}")
     private List<String> whiteUrlList;
     
-    @Value("app.url.permitall")
+    @Value("${app.config.security.permit-all}")
     private boolean permitAllUrl;
     
     // <request api matcher,List<role_string>>

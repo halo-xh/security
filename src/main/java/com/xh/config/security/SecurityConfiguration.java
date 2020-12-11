@@ -1,5 +1,6 @@
 package com.xh.config.security;
 
+import com.xh.common.MyConstants;
 import com.xh.jwt.JWTFilter;
 import com.xh.service.AuthorityService;
 import com.xh.security.DBAuthenticationProvider;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
@@ -47,14 +49,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
 
-    @Resource
-    private FilterSecurityInterceptor filterSecurityInterceptor;
-
+    @Autowired
+    private FilterInvocationSecurityMetadataSource URIFilterInvocationSecurityMetaSource;
+    
     @Autowired
     private JWTFilter jwtFilter;
-
-    @Resource
-    private HttpSessionCsrfTokenRepository httpSessionCsrfTokenRepository;
 
     @Resource
     @Qualifier("logoutSuccessHandler")
@@ -66,6 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Resource
     private AuthorityService authorityService;
 
+    @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return authenticationManager();
@@ -77,8 +77,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(HttpMethod.TRACE, "**").denyAll()
                 .and()
                 .csrf().disable()
-                .addFilterBefore(filterSecurityInterceptor, FilterSecurityInterceptor.class)
-//                .addFilterBefore(openEntityManagerInViewFilter, SecurityContextPersistenceFilter.class)
+                .addFilterBefore(filterSecurityInterceptor(), FilterSecurityInterceptor.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers().frameOptions().sameOrigin()
                 .and()
@@ -89,7 +88,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
-        List<AuthenticationProvider> providerList = new ArrayList<AuthenticationProvider>();
+        List<AuthenticationProvider> providerList = new ArrayList<>();
         providerList.add(dBAuthenticationProvider());
         ProviderManager authenticationManager = new ProviderManager(providerList);
         authenticationManager.setEraseCredentialsAfterAuthentication(true);
@@ -115,25 +114,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new HttpStatusReturningLogoutSuccessHandler();
     }
     
-    @Bean("filterSecurityInterceptor")
-    public FilterSecurityInterceptor filterSecurityInterceptor
-            (AffirmativeBased accessDecisionManager, FilterInvocationSecurityMetadataSource securityMetadataSource){
-        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
-        filterSecurityInterceptor.setAccessDecisionManager(accessDecisionManager);
-        filterSecurityInterceptor.setSecurityMetadataSource(securityMetadataSource);
-        return filterSecurityInterceptor;
-    }
-    
-    @Bean("accessDecisionManager")
     public AffirmativeBased accessDecisionManager(){
-        List<AccessDecisionVoter<? extends Object>> constructArgs = new ArrayList<AccessDecisionVoter<? extends Object>>();
+        List<AccessDecisionVoter<? extends Object>> constructArgs = new ArrayList<>();
         AuthenticatedVoter authenticatedVoter = new AuthenticatedVoter();
         RoleVoter roleVoter = new RoleVoter();
-        roleVoter.setRolePrefix("");
+        roleVoter.setRolePrefix(MyConstants.VOTER_ROLE_PREFIX);
         PermitAllVoter permitAllVoter = new PermitAllVoter();
         constructArgs.add(authenticatedVoter);
         constructArgs.add(roleVoter);
         constructArgs.add(permitAllVoter);
         return new AffirmativeBased(constructArgs);
     }
+    
+    public FilterSecurityInterceptor filterSecurityInterceptor(){
+        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
+        filterSecurityInterceptor.setAccessDecisionManager(accessDecisionManager());
+        filterSecurityInterceptor.setSecurityMetadataSource(URIFilterInvocationSecurityMetaSource);
+        return filterSecurityInterceptor;
+    }
+    
 }

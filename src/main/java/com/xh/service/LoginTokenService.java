@@ -14,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface LoginTokenService extends IService<LoginToken> {
 
     boolean existsUserToken(String username, String authToken);
+    
+    boolean delIfExistsUserSession(String username);
+    
 }

@@ -2,6 +2,7 @@ package com.xh.security;
 
 import com.xh.service.AuthorityService;
 import com.xh.service.MyUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -21,8 +22,6 @@ import java.util.*;
 
 public class DBAuthenticationProvider extends DaoAuthenticationProvider {
     
-    private MyUserDetailsService userDetailsService;
-    
     private PasswordEncoder passwordEncoder;
     
     private AuthorityService authorityService;
@@ -38,7 +37,7 @@ public class DBAuthenticationProvider extends DaoAuthenticationProvider {
         }
         String loginname = ((LoginUser) userDetails).getLoginname();
         String presentedPassword = authentication.getCredentials().toString();
-        if (this.getPasswordEncoder().matches(presentedPassword, userDetails.getPassword())) {
+        if (this.passwordEncoder.matches(presentedPassword, userDetails.getPassword())) {
             // may expire check.todo
             
             Collection<GrantedAuthority> authorities = authorityService.getGrantedAuthorityByLoginName(((LoginUser) userDetails).getSid());
@@ -49,10 +48,6 @@ public class DBAuthenticationProvider extends DaoAuthenticationProvider {
         throw new BadCredentialsException(this.messages.getMessage(
                 "AbstractUserDetailsAuthenticationProvider.badCredentials",
                 "Bad credentials"));
-    }
-    
-    public void setUserDetailsService(MyUserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
     }
     
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {

@@ -5,4 +5,5 @@ public interface LoginToken {
     String token = "token";
     String user = "user";
     String createdt = "createdt";
+    String expiredt = "expiredt";
 }

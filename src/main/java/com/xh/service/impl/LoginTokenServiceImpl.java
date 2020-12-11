@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -31,5 +32,12 @@ public class LoginTokenServiceImpl extends ServiceImpl<LoginTokenMapper, LoginTo
         conditions.put(com.xh.domain.columns.LoginToken.token, authToken);
         return super.getOne(new QueryWrapper<LoginToken>().allEq(conditions)) != null;
     }
-
+    
+    @Override
+    public boolean delIfExistsUserSession(String username) {
+        QueryWrapper<LoginToken> queryWrapper = new QueryWrapper<LoginToken>().eq(com.xh.domain.columns.LoginToken.user, username)
+                .ge(com.xh.domain.columns.LoginToken.expiredt, new Date());
+        return super.remove(queryWrapper);
+    }
+    
 }

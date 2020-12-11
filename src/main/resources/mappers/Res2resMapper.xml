@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xh.mapper.Res2resMapper">
 
-    <select id="getResListByParentId">
+    <select id="getResListByParentId" resultType="com.xh.domain.Res2res">
         select * from res2res where parentid = #{pId}
     </select>
 
-    <select id="getActiveList">
-        select * from res2res where status ='A'
+    <select id="getActiveList" resultType="com.xh.domain.Res2res">
+        select * from res2res ;
     </select>
 </mapper>

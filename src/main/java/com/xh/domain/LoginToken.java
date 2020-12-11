@@ -39,6 +39,8 @@ public class LoginToken implements Serializable {
 
     @TableField(fill = FieldFill.INSERT)
     private Date createdt;
-
+    
+    @ApiModelProperty(value = "expire datetime")
+    private Date expiredt;
 
 }

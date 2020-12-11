@@ -26,8 +26,7 @@ app:
       valid-second: 3600
       valid-second-rem: 36000
     security:
-      permit-all: false
-      white-url: /blog/subject-login/authenticate
+      permit-all: true
 
 
 

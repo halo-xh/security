@@ -21,8 +21,25 @@ public class URIFilterInvocationSecurityMetaSource implements FilterInvocationSe
     @Autowired
     private AuthorityService authorityService;
     
-    @Value("${app.config.security.white-url}")
-    private List<String> whiteUrlList;
+    private List<String> whiteUrlList = new ArrayList<String>(){{
+        add("/");
+        add("/**/*.css");
+        add("/**/*.js");
+        add("/**/*.json");
+        add("/images/**");
+        add("/fonts/**");
+        add("/**.js.map");
+        add("/**.png");
+        add("/**.woff");
+        add("/**.ttf");
+        add("/i18n/**");
+        add("/index.html");
+        add("/api/logout");
+        add("/favicon.ico");
+        add("/blog/subject-login/authenticate");
+        add("/swagger-resources/**");
+        add("/swagger-ui/index.html");
+    }};
     
     @Value("${app.config.security.permit-all}")
     private boolean permitAllUrl;

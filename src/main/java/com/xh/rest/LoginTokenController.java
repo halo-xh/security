@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-12-09
  */
 @RestController
-@RequestMapping("/generated/login-token")
+@RequestMapping("/api/login-token")
 public class LoginTokenController {
 
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-12-10
  */
 @RestController
-@RequestMapping("/generated/res2-res")
+@RequestMapping("/api/res2-res")
 public class Res2resController {
 
 }

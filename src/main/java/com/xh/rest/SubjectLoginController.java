@@ -33,7 +33,7 @@ import java.security.GeneralSecurityException;
  * @since 2020-12-09
  */
 @RestController
-@RequestMapping("/blog/subject-login")
+@RequestMapping("/api/subject-login")
 public class SubjectLoginController {
     
     private final TokenProvider tokenProvider;

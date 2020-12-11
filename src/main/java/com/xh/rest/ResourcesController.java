@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-12-09
  */
 @RestController
-@RequestMapping("/blog/resources")
+@RequestMapping("/api/resources")
 public class ResourcesController {
 
 }

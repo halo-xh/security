@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-12-10
  */
 @RestController
-@RequestMapping("/generated/user2-role")
+@RequestMapping("/api/user2-role")
 public class User2roleController {
 
 }

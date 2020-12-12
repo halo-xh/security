@@ -1,6 +1,7 @@
 package com.xh.jwt;
 
 import com.xh.domain.LoginToken;
+import com.xh.security.LoginUser;
 import com.xh.service.LoginTokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -87,6 +89,7 @@ public class TokenProvider {
                 .collect(Collectors.joining(","));
         String principal = (String) authentication.getPrincipal();
 
+
         return Jwts.builder()
                 .setSubject("loginName")
                 .claim("auth", authorities)
@@ -106,7 +109,8 @@ public class TokenProvider {
         LoginToken loginToken = new LoginToken();
         loginToken.setExpiredt(validity);
         loginToken.setUser((String) authentication.getPrincipal());
-        userTokenService.save(loginToken);
+        loginToken.setToken(jwtToken);
+        userTokenService.saveToken(loginToken);
         return jwtToken;
     }
     

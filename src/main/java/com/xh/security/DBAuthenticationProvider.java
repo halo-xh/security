@@ -22,10 +22,8 @@ import java.util.*;
 
 public class DBAuthenticationProvider extends DaoAuthenticationProvider {
     
-    private PasswordEncoder passwordEncoder;
-    
     private AuthorityService authorityService;
-    
+
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
         this.logger.info("additionalAuthenticationChecks()");
@@ -36,10 +34,11 @@ public class DBAuthenticationProvider extends DaoAuthenticationProvider {
                     "Bad credentials"));
         }
         String loginname = ((LoginUser) userDetails).getLoginname();
-        String presentedPassword = authentication.getCredentials().toString();
-        if (this.passwordEncoder.matches(presentedPassword, userDetails.getPassword())) {
+        String presentedPassword = (String) authentication.getCredentials();
+        System.out.println("presentedPassword = " + presentedPassword);
+        System.out.println("userDetails = " + userDetails.getPassword());
+        if (super.getPasswordEncoder().matches(presentedPassword, userDetails.getPassword())) {
             // may expire check.todo
-            
             Collection<GrantedAuthority> authorities = authorityService.getGrantedAuthorityByLoginName(((LoginUser) userDetails).getSid());
             ((LoginUser) userDetails).setAuthorities(authorities);
             return;
@@ -50,11 +49,27 @@ public class DBAuthenticationProvider extends DaoAuthenticationProvider {
                 "Bad credentials"));
     }
     
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-    
     public void setAuthorityService(AuthorityService authorityService) {
         this.authorityService = authorityService;
+    }
+
+    @Override
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        super.setPasswordEncoder(passwordEncoder);
+    }
+
+    /**
+     * 		Object principalToReturn = user;
+     *
+     * 		if (forcePrincipalAsString) {
+     * 			principalToReturn = user.getUsername();
+     *                }
+     *
+     * 		return createSuccessAuthentication(principalToReturn, authentication, user);
+     *
+     */
+    @Override
+    public void setForcePrincipalAsString(boolean forcePrincipalAsString) {
+        super.setForcePrincipalAsString(forcePrincipalAsString);
     }
 }

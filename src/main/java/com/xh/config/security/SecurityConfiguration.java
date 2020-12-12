@@ -95,7 +95,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return authenticationManager;
     }
 
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -106,6 +105,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         dBAuthenticationProvider.setUserDetailsService(userDetailsService);
         dBAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         dBAuthenticationProvider.setAuthorityService(authorityService);
+        dBAuthenticationProvider.setForcePrincipalAsString(true);
         return dBAuthenticationProvider;
     }
 
@@ -115,7 +115,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
     
     public AffirmativeBased accessDecisionManager(){
-        List<AccessDecisionVoter<? extends Object>> constructArgs = new ArrayList<>();
+        List<AccessDecisionVoter<?>> constructArgs = new ArrayList<>();
         AuthenticatedVoter authenticatedVoter = new AuthenticatedVoter();
         RoleVoter roleVoter = new RoleVoter();
         roleVoter.setRolePrefix(MyConstants.VOTER_ROLE_PREFIX);

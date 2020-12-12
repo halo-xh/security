@@ -33,11 +33,11 @@ CREATE TABLE `resources` (
   PRIMARY KEY (`rid`) USING BTREE,
   UNIQUE KEY `res_uk_resname` (`resname`) USING BTREE,
   UNIQUE KEY `res_uk_name_type` (`resname`,`restype`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 -- ----------------------------
 -- Table structure for subject_login
 -- ----------------------------
-DROP TABLE IF EXISTS `subject_login`;
+-- DROP TABLE IF EXISTS `subject_login`;
 CREATE TABLE `subject_login`  (
   `sid` int(4) NOT NULL AUTO_INCREMENT,
   `loginname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE `subject_login`  (
 -- ----------------------------
 -- Table structure for login_token
 -- ----------------------------
-DROP TABLE IF EXISTS `login_token`;
+-- DROP TABLE IF EXISTS `login_token`;
 CREATE TABLE `login_token`  (
   `tid` int(4) NOT NULL,
   `token` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,

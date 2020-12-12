@@ -30,7 +30,7 @@ public class Resources implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "rid", type = IdType.ID_WORKER)
+    @TableId(value = "rid", type = IdType.AUTO)
     private Integer rid;
 
     private String resname;

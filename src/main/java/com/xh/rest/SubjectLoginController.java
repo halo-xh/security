@@ -2,8 +2,6 @@ package com.xh.rest;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.deploy.xml.BadTokenException;
-import com.xh.common.ResponseObject;
 import com.xh.jwt.JWTFilter;
 import com.xh.jwt.TokenProvider;
 import com.xh.rest.vo.LoginVM;
@@ -20,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletResponse;
-import java.security.GeneralSecurityException;
 
 /**
  * <p>
@@ -84,7 +79,7 @@ public class SubjectLoginController {
     private Authentication createAuthentication(LoginVM loginVM) {
         System.out.println(loginVM);
          UsernamePasswordAuthenticationToken authenticationToken =
-            new UsernamePasswordAuthenticationToken(loginVM.getUsername(),loginVM.getPassword());
+            new UsernamePasswordAuthenticationToken(loginVM.getUsername(),new String(loginVM.getPassword()));
         Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
         loginVM.setPassword(null);
         return authentication;

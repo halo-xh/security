@@ -2,4 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xh.mapper.LoginTokenMapper">
 
+    <insert id="saveToken" useGeneratedKeys="true" keyProperty="tid" keyColumn="tid">
+        insert  into login_token
+        (token,user,createdt,expiredt)
+        values
+        (#{token},#{user},now(),#{expiredt})
+    </insert>
 </mapper>

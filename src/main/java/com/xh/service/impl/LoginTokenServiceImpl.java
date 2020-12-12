@@ -39,5 +39,10 @@ public class LoginTokenServiceImpl extends ServiceImpl<LoginTokenMapper, LoginTo
                 .ge(com.xh.domain.columns.LoginToken.expiredt, new Date());
         return super.remove(queryWrapper);
     }
-    
+
+    @Override
+    public int saveToken(LoginToken token) {
+        return loginTokenMapper.saveToken(token);
+    }
+
 }

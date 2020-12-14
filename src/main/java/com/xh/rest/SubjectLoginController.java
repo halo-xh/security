@@ -77,7 +77,6 @@ public class SubjectLoginController {
     }
     
     private Authentication createAuthentication(LoginVM loginVM) {
-        System.out.println(loginVM);
          UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginVM.getUsername(),new String(loginVM.getPassword()));
         Authentication authentication = this.authenticationManager.authenticate(authenticationToken);

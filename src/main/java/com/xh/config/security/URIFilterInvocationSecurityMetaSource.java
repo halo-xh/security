@@ -66,9 +66,8 @@ public class URIFilterInvocationSecurityMetaSource implements FilterInvocationSe
     @Override
     public Collection<ConfigAttribute> getAllConfigAttributes() {
         this.requestMap = this.authorityService.initAuthorityMap(permitAllUrl, whiteUrlList);
-        Set<ConfigAttribute> allAttributes = new HashSet<ConfigAttribute>();
-        for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : requestMap
-                .entrySet()) {
+        Set<ConfigAttribute> allAttributes = new HashSet<>();
+        for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : requestMap.entrySet()) {
             allAttributes.addAll(entry.getValue());
         }
         return allAttributes;

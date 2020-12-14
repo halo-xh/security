@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 @Component
 public class TokenProvider {
     
+    private static final String AUTH = "auth";
     private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
     
     @Value("${app.config.jwt.key}")
@@ -78,10 +79,10 @@ public class TokenProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
         Collection<? extends GrantedAuthority> authorities = null;
-        if (StringUtils.isEmpty(claims.get("auth").toString())) {
+        if (StringUtils.isEmpty(claims.get(AUTH).toString())) {
             authorities = new ArrayList<GrantedAuthority>();
         } else {
-            authorities = Arrays.stream(claims.get("auth").toString().split(","))
+            authorities = Arrays.stream(claims.get(AUTH).toString().split(","))
                     .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         }
         User principal = new User(claims.getSubject(), "", authorities);
@@ -112,7 +113,7 @@ public class TokenProvider {
 
         return Jwts.builder()
                 .setSubject("loginName")
-                .claim("auth", authorities)
+                .claim(AUTH, authorities)
                 .claim(TokenPayload.USERNAME, principal)
                 .signWith(key, SignatureAlgorithm.HS512).setExpiration(validity).compact();
     }

@@ -100,7 +100,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     //[POST]/api/test
     private static RequestMatcher apiPathResolver(String apiPath) {
         RequestMatcher matcher = null;
-        if (apiPath.contains("[") && apiPath.contains("]")) {
+        if (apiPath.startsWith("[") && apiPath.contains("]")) {
             int endIndex = apiPath.indexOf("]");
             String api = apiPath.substring(endIndex + 1).trim();
             String method = apiPath.substring(1, endIndex);

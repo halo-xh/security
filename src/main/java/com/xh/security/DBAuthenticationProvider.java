@@ -61,8 +61,8 @@ public class DBAuthenticationProvider extends DaoAuthenticationProvider {
      * 		return createSuccessAuthentication(principalToReturn, authentication, user);
      *
      */
-    @Override
-    public void setForcePrincipalAsString(boolean forcePrincipalAsString) {
-        super.setForcePrincipalAsString(forcePrincipalAsString);
-    }
+//    @Override
+//    public void setForcePrincipalAsString(boolean forcePrincipalAsString) {
+//        super.setForcePrincipalAsString(forcePrincipalAsString);
+//    }
 }

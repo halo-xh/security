@@ -80,27 +80,27 @@ public class TokenProvider {
         Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
         Collection<? extends GrantedAuthority> authorities = null;
         if (StringUtils.isEmpty(claims.get(AUTH).toString())) {
-            authorities = new ArrayList<GrantedAuthority>();
+            authorities = new ArrayList<>();
         } else {
             authorities = Arrays.stream(claims.get(AUTH).toString().split(","))
                     .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         }
-        User principal = new User(claims.getSubject(), "", authorities);
-    
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                principal.getUsername(), token, authorities);
+        User principal = new User(claims.get(TokenPayload.USERNAME).toString(), "", authorities);
+        
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(principal, token, authorities);
 //        usernamePasswordAuthenticationToken.setDetails(claims);
         return usernamePasswordAuthenticationToken;
     }
     
     
     private boolean validateUserToken(Claims jwtBody, String authToken) {
-        String loginMethodAndId = jwtBody.getSubject();
+        String subject = jwtBody.getSubject();
         String username = String.valueOf(jwtBody.get(TokenPayload.USERNAME));
         boolean existsUserToken = userTokenService.existsUserToken(username, authToken); //todo. chk in db
         if (!existsUserToken) {
             SecurityContextHolder.clearContext();
-            log.info("User session token not found in database for {}, probably logged out by another session.", loginMethodAndId);
+            log.info("User session token not found in database for {}, probably logged out by another session.", subject);
         }
         return existsUserToken;
     }
@@ -108,13 +108,11 @@ public class TokenProvider {
     private String buildToken(Authentication authentication, Date validity){
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-        String principal = (String) authentication.getPrincipal();
-
-
+        String username = authentication.getName();
         return Jwts.builder()
-                .setSubject("loginName")
+                .setSubject("token-subject")
                 .claim(AUTH, authorities)
-                .claim(TokenPayload.USERNAME, principal)
+                .claim(TokenPayload.USERNAME, username)
                 .signWith(key, SignatureAlgorithm.HS512).setExpiration(validity).compact();
     }
     
@@ -129,7 +127,7 @@ public class TokenProvider {
         String jwtToken = buildToken(authentication, validity);
         LoginToken loginToken = new LoginToken();
         loginToken.setExpiredt(validity);
-        loginToken.setUser((String) authentication.getPrincipal());
+        loginToken.setUser(authentication.getName());
         loginToken.setToken(jwtToken);
         userTokenService.saveToken(loginToken);
         return jwtToken;

@@ -11,9 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -22,6 +25,9 @@ import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -69,13 +75,27 @@ public class TokenProvider {
         return false;
     }
     
-    public Authentication getAuthentication(String jwt) {
-        return null;
+    public Authentication getAuthentication(String token) {
+        Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        Collection<? extends GrantedAuthority> authorities = null;
+        if (StringUtils.isEmpty(claims.get("auth").toString())) {
+            authorities = new ArrayList<GrantedAuthority>();
+        } else {
+            authorities = Arrays.stream(claims.get("auth").toString().split(","))
+                    .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        }
+        User principal = new User(claims.getSubject(), "", authorities);
+    
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                principal.getUsername(), token, authorities);
+//        usernamePasswordAuthenticationToken.setDetails(claims);
+        return usernamePasswordAuthenticationToken;
     }
+    
     
     private boolean validateUserToken(Claims jwtBody, String authToken) {
         String loginMethodAndId = jwtBody.getSubject();
-        String username = String.valueOf(jwtBody.get("login_name"));
+        String username = String.valueOf(jwtBody.get(TokenPayload.USERNAME));
         boolean existsUserToken = userTokenService.existsUserToken(username, authToken); //todo. chk in db
         if (!existsUserToken) {
             SecurityContextHolder.clearContext();

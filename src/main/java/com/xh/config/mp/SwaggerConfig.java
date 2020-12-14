@@ -3,10 +3,13 @@ package com.xh.config.mp;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -29,7 +32,15 @@ public class SwaggerConfig {
 
     @Bean // Docket 实例
     public Docket docket(){
+        ParameterBuilder parameterBuilder = new ParameterBuilder();
+        parameterBuilder.name("Authorization").description("Authorization")
+                .modelRef(new ModelRef("string")).parameterType("header")
+                .required(false).build();
+        ArrayList<Parameter> parameters = new ArrayList<>();
+        parameters.add(parameterBuilder.build());
+    
         return new Docket(DocumentationType.SWAGGER_2)
+                .globalOperationParameters(parameters)// set header api
                 .apiInfo(apiInfo())
 //                .groupName("xh")
                 .enable(true)  // 启用 默认true

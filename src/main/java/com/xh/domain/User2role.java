@@ -34,7 +34,7 @@ public class User2role implements Serializable {
 
     private Integer userid;
 
-    private Integer roleid;
+    private String rolename;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createdt;

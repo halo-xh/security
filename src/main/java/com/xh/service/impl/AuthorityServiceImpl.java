@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -29,19 +30,19 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AuthorityServiceImpl implements AuthorityService {
-    
+
     @Autowired
     private ResourcesMapper resourcesMapper;
-    
+
     @Autowired
     private Res2resMapper res2resMapper;
-    
+
     @Autowired
     private User2roleMapper user2roleMapper;
-    
+
     @Autowired
     private SubjectLoginMapper subjectLoginMapper;
-    
+
     @Override
     public Map<RequestMatcher, Collection<ConfigAttribute>> initAuthorityMap(boolean permitAllUrl, List<String> whiteUrlList) {
         List<Resources> apiResList = resourcesMapper.getListByType(MyConstants.RES_TYPE_API);
@@ -59,13 +60,15 @@ public class AuthorityServiceImpl implements AuthorityService {
             }
         }
         // db config
+        List<Resources> roleResList = resourcesMapper.getListByType(MyConstants.RES_TYPE_API);
+        Map<Integer, String> roleMap = roleResList.stream().collect(Collectors.toMap(Resources::getRid, Resources::getResname));
         List<Res2res> res2resMapping = res2resMapper.getActiveList();
         HashMap<Integer, String> res2RoleMap = new HashMap<>();
         for (Res2res res2res : res2resMapping) {// api res mapping to role id
             if (!res2RoleMap.containsKey(res2res.getResid())) {
-                res2RoleMap.put(res2res.getResid(), res2res.getParentid().toString());
+                res2RoleMap.put(res2res.getResid(), roleMap.get(res2res.getParentid()));
             } else {
-                res2RoleMap.put(res2res.getResid(), res2RoleMap.get(res2res.getResid()) + "," + res2res.getParentid());
+                res2RoleMap.put(res2res.getResid(), res2RoleMap.get(res2res.getResid()) + "," +roleMap.get(res2res.getParentid()));
             }
         }
         for (Resources resources : apiResList) {
@@ -73,30 +76,35 @@ public class AuthorityServiceImpl implements AuthorityService {
             String path = resources.getPath();
             RequestMatcher matcher = apiPathResolver(path);
             String roles = res2RoleMap.get(apiResId); // "1,4,3.."
-            Collection<ConfigAttribute> atts = SecurityConfig.createListFromCommaDelimitedString(roles);
-            map.put(matcher, atts);
+            if (roles == null) { continue; }
+            if (roles.contains(",")) {
+                Collection<ConfigAttribute> atts = SecurityConfig.createListFromCommaDelimitedString(roles);
+                map.put(matcher, atts);
+            } else {
+                map.put(matcher, Collections.singletonList(new SecurityConfig(roles.trim())));
+            }
         }
         //permit all
-        if (!permitAllUrl) {
+        if (permitAllUrl) {
             AntPathRequestMatcher matcher = new AntPathRequestMatcher("/**");
             List<ConfigAttribute> configAttList = new ArrayList<>();
             ConfigAttribute configAttr = new SecurityConfig(AuthenticatedVoter.IS_AUTHENTICATED_FULLY);
             configAttList.add(configAttr);
             map.put(matcher, configAttList);
         }
-        
+
         return map;
     }
-    
+
     @Override
     public Collection<GrantedAuthority> getGrantedAuthorityByLoginName(Integer userId) {
         // get user role
         List<User2role> user2roleList = user2roleMapper.getByUserId(userId);//
-        String roles = user2roleList.stream().map(User2role::getRoleid).map(String::valueOf).collect(Collectors.joining(","));
-        // pack role. 1,2,34,5...
-        return  AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
+        String roles = user2roleList.stream().map(User2role::getRolename).map(String::valueOf).collect(Collectors.joining(","));
+        // pack role. role-test,role-admin...
+        return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
     }
-    
+
     //[POST]/api/test
     private static RequestMatcher apiPathResolver(String apiPath) {
         RequestMatcher matcher = null;

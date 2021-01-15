@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionVoter;
-import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
@@ -25,7 +24,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 import javax.annotation.Resource;
@@ -50,6 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
 
     @Autowired
+    @Qualifier("securityMetadataSource")
     private FilterInvocationSecurityMetadataSource URIFilterInvocationSecurityMetaSource;
     
     @Autowired
@@ -84,12 +84,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.logout().logoutSuccessHandler(logoutSuccessHandler);
+        http.exceptionHandling().authenticationEntryPoint(new BasicAuthenticationEntryPoint());
     }
 
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
         List<AuthenticationProvider> providerList = new ArrayList<>();
-        providerList.add(dBAuthenticationProvider());
+        providerList.add(dbauthenticationprovider());
         ProviderManager authenticationManager = new ProviderManager(providerList);
         authenticationManager.setEraseCredentialsAfterAuthentication(true);
         return authenticationManager;
@@ -100,13 +101,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DBAuthenticationProvider dBAuthenticationProvider() {
-        DBAuthenticationProvider dBAuthenticationProvider = new DBAuthenticationProvider();
-        dBAuthenticationProvider.setUserDetailsService(userDetailsService);
-        dBAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        dBAuthenticationProvider.setAuthorityService(authorityService);
-        dBAuthenticationProvider.setForcePrincipalAsString(true);
-        return dBAuthenticationProvider;
+    public DBAuthenticationProvider dbauthenticationprovider() {
+        DBAuthenticationProvider dbAuthenticationProvider = new DBAuthenticationProvider();
+        dbAuthenticationProvider.setUserDetailsService(userDetailsService);
+        dbAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        dbAuthenticationProvider.setAuthorityService(authorityService);
+        dbAuthenticationProvider.setForcePrincipalAsString(true);
+        return dbAuthenticationProvider;
     }
 
     @Bean(name = "logoutSuccessHandler")

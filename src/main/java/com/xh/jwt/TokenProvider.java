@@ -85,6 +85,7 @@ public class TokenProvider {
             authorities = Arrays.stream(claims.get(AUTH).toString().split(","))
                     .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         }
+        System.out.println("authorities = " + authorities);
         User principal = new User(claims.get(TokenPayload.USERNAME).toString(), "", authorities);
         
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =

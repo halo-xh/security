@@ -51,15 +51,14 @@ public class URIFilterInvocationSecurityMetaSource implements FilterInvocationSe
     @Override
     public Collection<ConfigAttribute> getAttributes(Object invocation) throws IllegalArgumentException {
         final HttpServletRequest request = ((FilterInvocation) invocation).getRequest();
-        Collection<ConfigAttribute> attrs = null;
         this.requestMap = authorityService.initAuthorityMap(permitAllUrl, whiteUrlList);
         for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : requestMap.entrySet()) {
             if (entry.getKey().matches(request)) {
-                attrs = entry.getValue();
-                break;
+                System.out.println("entry = " + entry);
+                return entry.getValue();
             }
         }
-        return attrs;
+        return null;
     }
     
     

@@ -33,7 +33,6 @@ public class DBAuthenticationProvider extends DaoAuthenticationProvider {
                     "AbstractUserDetailsAuthenticationProvider.badCredentials",
                     "Bad credentials"));
         }
-        String loginname = ((LoginUser) userDetails).getLoginname();
         String presentedPassword = (String) authentication.getCredentials();
         if (getPasswordEncoder().matches(presentedPassword, userDetails.getPassword())) {
             // may expire check.todo

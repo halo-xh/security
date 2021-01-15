@@ -21,7 +21,7 @@ public class URIFilterInvocationSecurityMetaSource implements FilterInvocationSe
     @Autowired
     private AuthorityService authorityService;
     
-    private List<String> whiteUrlList = new ArrayList<String>(){{
+    private final List<String> whiteUrlList = new ArrayList<String>(){{
         add("/");
         add("/**/*.css");
         add("/**/*.js");

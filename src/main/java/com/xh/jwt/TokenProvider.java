@@ -79,20 +79,16 @@ public class TokenProvider {
             authorities = new ArrayList<>();
         } else {
             authorities = Arrays.stream(claims.get(AUTH).toString().split(","))
-                    .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+                            .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         }
-        System.out.println("authorities = " + authorities);
-        User principal = new User(claims.get(TokenPayload.USERNAME).toString(), "", authorities);
-        
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(principal, token, authorities);
-        return usernamePasswordAuthenticationToken;
+        User principal = new User(claims.getSubject(), "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
     
     
     private boolean validateUserToken(Claims jwtBody, String authToken) {
         String subject = jwtBody.getSubject();
-        String username = String.valueOf(jwtBody.get(TokenPayload.USERNAME));
+        String username = String.valueOf(jwtBody.getSubject());
         boolean existsUserToken = userTokenService.existsUserToken(username, authToken);
         if (!existsUserToken) {
             SecurityContextHolder.clearContext();
@@ -129,10 +125,6 @@ public class TokenProvider {
         return jwtToken;
     }
 
-    private static class TokenPayload{
-        public static final String USERNAME = "username";
-    }
-    
     @PostConstruct
     public void init() {
         byte[] keyBytes;

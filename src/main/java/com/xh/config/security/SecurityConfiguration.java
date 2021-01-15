@@ -2,6 +2,8 @@ package com.xh.config.security;
 
 import com.xh.common.MyConstants;
 import com.xh.jwt.JWTFilter;
+import com.xh.jwt.JwtAccessDeniedHandler;
+import com.xh.jwt.JwtAuthenticationEntryPoint;
 import com.xh.service.AuthorityService;
 import com.xh.security.DBAuthenticationProvider;
 import com.xh.service.MyUserDetailsService;
@@ -41,7 +43,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * configuration for security
  */
-@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -65,6 +66,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Resource
     private AuthorityService authorityService;
 
+    @Resource
+    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
+    @Resource
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -75,6 +82,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests().antMatchers(HttpMethod.TRACE, "**").denyAll()
+                .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
                 .addFilterBefore(filterSecurityInterceptor(), FilterSecurityInterceptor.class)
@@ -84,7 +92,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.logout().logoutSuccessHandler(logoutSuccessHandler);
-        http.exceptionHandling().authenticationEntryPoint(new BasicAuthenticationEntryPoint());
+        http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler);
     }
 
     @Override

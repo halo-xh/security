@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 @Service
 public class AuthorityServiceImpl implements AuthorityService {
 
+    public static final String ROLE_ADMIN = "role-admin";
     @Autowired
     private ResourcesMapper resourcesMapper;
 
@@ -77,13 +78,18 @@ public class AuthorityServiceImpl implements AuthorityService {
             String path = resources.getPath();
             RequestMatcher matcher = apiPathResolver(path);
             String roles = res2RoleMap.get(apiResId);
-            if (roles == null) { continue; }
-            if (roles.contains(",")) {
-                Collection<ConfigAttribute> atts = SecurityConfig.createListFromCommaDelimitedString(roles);
-                map.put(matcher, atts);
-            } else {
-                map.put(matcher, Collections.singletonList(new SecurityConfig(roles.trim())));
+            if (roles != null) {
+                if (roles.contains(",")) {
+                    Collection<ConfigAttribute> atts = SecurityConfig.createListFromCommaDelimitedString(roles);
+                    map.put(matcher, atts);
+                } else {
+                    map.put(matcher, Collections.singletonList(new SecurityConfig(roles.trim())));
+                }
+            }else {
+                //默认 admin 可以访问所有
+                map.put(matcher,Collections.singletonList(new SecurityConfig(ROLE_ADMIN)));
             }
+
         }
         //permit all
         if (permitAllUrl) {

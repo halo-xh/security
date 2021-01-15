@@ -12,6 +12,7 @@ import java.util.Collection;
  * Created by Xiao Hong on 2020-12-10
  */
 public class PermitAllVoter implements AccessDecisionVoter<Object> {
+
     @Override
     public boolean supports(ConfigAttribute attribute) {
         return attribute instanceof PermitAllConfigAtrribute;

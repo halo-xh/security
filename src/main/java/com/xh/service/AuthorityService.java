@@ -18,7 +18,10 @@ import java.util.Set;
  */
 
 public interface AuthorityService {
-    
+
+    /**
+     * 可以 利用缓存优化 缓存
+     */
     Map<RequestMatcher, Collection<ConfigAttribute>> initAuthorityMap(boolean permitAllUrl, List<String> whiteUrlList);
     
     Collection<GrantedAuthority> getGrantedAuthorityByLoginName(Integer loginName);

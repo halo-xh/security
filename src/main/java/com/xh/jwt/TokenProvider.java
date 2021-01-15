@@ -1,7 +1,6 @@
 package com.xh.jwt;
 
 import com.xh.domain.LoginToken;
-import com.xh.security.LoginUser;
 import com.xh.service.LoginTokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -17,13 +16,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,7 +86,6 @@ public class TokenProvider {
         
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(principal, token, authorities);
-//        usernamePasswordAuthenticationToken.setDetails(claims);
         return usernamePasswordAuthenticationToken;
     }
     
@@ -98,7 +93,7 @@ public class TokenProvider {
     private boolean validateUserToken(Claims jwtBody, String authToken) {
         String subject = jwtBody.getSubject();
         String username = String.valueOf(jwtBody.get(TokenPayload.USERNAME));
-        boolean existsUserToken = userTokenService.existsUserToken(username, authToken); //todo. chk in db
+        boolean existsUserToken = userTokenService.existsUserToken(username, authToken);
         if (!existsUserToken) {
             SecurityContextHolder.clearContext();
             log.info("User session token not found in database for {}, probably logged out by another session.", subject);
@@ -111,10 +106,10 @@ public class TokenProvider {
                 .collect(Collectors.joining(","));
         String username = authentication.getName();
         return Jwts.builder()
-                .setSubject("token-subject")
+                .setSubject(username)
                 .claim(AUTH, authorities)
-                .claim(TokenPayload.USERNAME, username)
-                .signWith(key, SignatureAlgorithm.HS512).setExpiration(validity).compact();
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity).compact();
     }
     
     public String createToken(Authentication authentication, boolean rememberMe) {
@@ -133,13 +128,9 @@ public class TokenProvider {
         userTokenService.saveToken(loginToken);
         return jwtToken;
     }
-    
-    
-    
-    private static class TokenPayload{
-        
-        public static final String USERNAME = "username";
 
+    private static class TokenPayload{
+        public static final String USERNAME = "username";
     }
     
     @PostConstruct

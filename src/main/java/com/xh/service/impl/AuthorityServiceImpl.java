@@ -11,6 +11,7 @@ import com.xh.mapper.SubjectLoginMapper;
 import com.xh.mapper.User2roleMapper;
 import com.xh.service.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.vote.AuthenticatedVoter;
@@ -60,7 +61,7 @@ public class AuthorityServiceImpl implements AuthorityService {
             }
         }
         // db config
-        List<Resources> roleResList = resourcesMapper.getListByType(MyConstants.RES_TYPE_API);
+        List<Resources> roleResList = resourcesMapper.getListByType(MyConstants.RES_TYPE_ROLE);
         Map<Integer, String> roleMap = roleResList.stream().collect(Collectors.toMap(Resources::getRid, Resources::getResname));
         List<Res2res> res2resMapping = res2resMapper.getActiveList();
         HashMap<Integer, String> res2RoleMap = new HashMap<>();
@@ -75,7 +76,7 @@ public class AuthorityServiceImpl implements AuthorityService {
             Integer apiResId = resources.getRid();
             String path = resources.getPath();
             RequestMatcher matcher = apiPathResolver(path);
-            String roles = res2RoleMap.get(apiResId); // "1,4,3.."
+            String roles = res2RoleMap.get(apiResId);
             if (roles == null) { continue; }
             if (roles.contains(",")) {
                 Collection<ConfigAttribute> atts = SecurityConfig.createListFromCommaDelimitedString(roles);
@@ -114,7 +115,8 @@ public class AuthorityServiceImpl implements AuthorityService {
             String method = apiPath.substring(1, endIndex);
             matcher = new AntPathRequestMatcher(api, method);
         } else {
-            matcher = new AntPathRequestMatcher(apiPath);
+            // 默认 get
+            matcher = new AntPathRequestMatcher(apiPath, "GET");
         }
         return matcher;
     }

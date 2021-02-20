@@ -5,7 +5,7 @@ import lombok.*;
 import java.io.Serializable;
 
 /**
- * eg. /api/test1[POST]
+ * eg. [POST]/api/test1
  *
  * Created by Xiao Hong on 2020-12-10
  */

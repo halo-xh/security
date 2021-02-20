@@ -116,14 +116,18 @@ public class AuthorityServiceImpl implements AuthorityService {
     private static RequestMatcher apiPathResolver(String apiPath) {
         RequestMatcher matcher = null;
         if (apiPath.startsWith("[") && apiPath.contains("]")) {
-            int endIndex = apiPath.indexOf("]");
-            String api = apiPath.substring(endIndex + 1).trim();
-            String method = apiPath.substring(1, endIndex);
-            matcher = new AntPathRequestMatcher(api, method);
+            matcher = getRequestMatcherFromApiPath(apiPath);
         } else {
             // 默认 get
             matcher = new AntPathRequestMatcher(apiPath, "GET");
         }
         return matcher;
+    }
+
+    private static AntPathRequestMatcher getRequestMatcherFromApiPath(String apiPath){
+        int endIndex = apiPath.indexOf("]");
+        String api = apiPath.substring(endIndex + 1).trim();
+        String method = apiPath.substring(1, endIndex);
+        return new AntPathRequestMatcher(api, method);
     }
 }

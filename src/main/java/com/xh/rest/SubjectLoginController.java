@@ -72,7 +72,7 @@ public class SubjectLoginController {
     private ResponseEntity<JWTToken> buildNewUserSessionResponse(Authentication authentication) {
         String jwt = tokenProvider.createToken(authentication,true);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
     }
     

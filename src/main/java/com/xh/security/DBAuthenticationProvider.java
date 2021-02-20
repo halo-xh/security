@@ -50,18 +50,4 @@ public class DBAuthenticationProvider extends DaoAuthenticationProvider {
         this.authorityService = authorityService;
     }
 
-    /**
-     * 		Object principalToReturn = user;
-     *
-     * 		if (forcePrincipalAsString) {
-     * 			principalToReturn = user.getUsername();
-     *                }
-     *
-     * 		return createSuccessAuthentication(principalToReturn, authentication, user);
-     *
-     */
-//    @Override
-//    public void setForcePrincipalAsString(boolean forcePrincipalAsString) {
-//        super.setForcePrincipalAsString(forcePrincipalAsString);
-//    }
 }

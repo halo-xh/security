@@ -1,5 +1,6 @@
 package com.xh.rest;
 
+import com.xh.common.AnonymousAccess;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,12 @@ public class TestController {
     
     @PostMapping("/test")
     public String testp(){
+        return "test post successfully";
+    }
+
+    @AnonymousAccess
+    @PostMapping("/test/asd")
+    public String testpasd(){
         return "test post successfully";
     }
     

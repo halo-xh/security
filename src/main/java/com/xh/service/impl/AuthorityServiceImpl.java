@@ -1,5 +1,6 @@
 package com.xh.service.impl;
 
+import com.xh.common.AnonymousAccess;
 import com.xh.common.MyConstants;
 import com.xh.config.security.PermitAllConfigAtrribute;
 import com.xh.domain.Res2res;
@@ -11,6 +12,7 @@ import com.xh.mapper.SubjectLoginMapper;
 import com.xh.mapper.User2roleMapper;
 import com.xh.service.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -21,6 +23,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.*;
 import java.util.stream.Collector;
@@ -45,6 +50,9 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Autowired
     private SubjectLoginMapper subjectLoginMapper;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     @Override
     public Map<RequestMatcher, Collection<ConfigAttribute>> initAuthorityMap(boolean permitAllUrl, List<String> whiteUrlList) {
         List<Resources> apiResList = resourcesMapper.getListByType(MyConstants.RES_TYPE_API);
@@ -54,11 +62,18 @@ public class AuthorityServiceImpl implements AuthorityService {
             for (String url : whiteUrlList) {
                 if (!StringUtils.isEmpty(url)) {
                     AntPathRequestMatcher urlMatcher = new AntPathRequestMatcher(url);
-                    List<ConfigAttribute> configAttList = new ArrayList<>();
-                    ConfigAttribute configAtt = new PermitAllConfigAtrribute();
-                    configAttList.add(configAtt);
+                    List<ConfigAttribute> configAttList =Collections.singletonList(new PermitAllConfigAtrribute()) ;
                     map.put(urlMatcher, configAttList);
                 }
+            }
+        }
+        // add annotation configured white api
+        Set<String> annotatedWhiteUrl = getAnnotatedWhiteUrl();
+        if (!annotatedWhiteUrl.isEmpty()) {
+            for (String url : annotatedWhiteUrl) {
+                AntPathRequestMatcher urlMatcher = new AntPathRequestMatcher(url);
+                List<ConfigAttribute> configAttList =Collections.singletonList(new PermitAllConfigAtrribute()) ;
+                map.put(urlMatcher, configAttList);
             }
         }
         // db config
@@ -129,5 +144,19 @@ public class AuthorityServiceImpl implements AuthorityService {
         String api = apiPath.substring(endIndex + 1).trim();
         String method = apiPath.substring(1, endIndex);
         return new AntPathRequestMatcher(api, method);
+    }
+
+    private Set<String> getAnnotatedWhiteUrl(){
+        // 搜寻匿名标记 url： @AnonymousAccess
+        Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = applicationContext.getBean(RequestMappingHandlerMapping.class).getHandlerMethods();
+        Set<String> anonymousUrls = new HashSet<>();
+        for (Map.Entry<RequestMappingInfo, HandlerMethod> infoEntry : handlerMethodMap.entrySet()) {
+            HandlerMethod handlerMethod = infoEntry.getValue();
+            AnonymousAccess anonymousAccess = handlerMethod.getMethodAnnotation(AnonymousAccess.class);
+            if (null != anonymousAccess) {
+                anonymousUrls.addAll(infoEntry.getKey().getPatternsCondition().getPatterns());
+            }
+        }
+        return anonymousUrls;
     }
 }

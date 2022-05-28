@@ -10,6 +10,9 @@ spring:
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
+  redis:
+    host: 127.0.0.1
+    port: 63791
 mybatis-plus:
   type-aliases-package: com.xh.domain
   mapper-locations: classpath:mappers/*.xml

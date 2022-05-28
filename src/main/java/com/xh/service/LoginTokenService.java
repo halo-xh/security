@@ -1,7 +1,6 @@
 package com.xh.service;
 
 import com.xh.domain.LoginToken;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
@@ -11,11 +10,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author Xiao Hong
  * @since 2020-12-09
  */
-public interface LoginTokenService extends IService<LoginToken> {
+public interface LoginTokenService  {
 
-    boolean existsUserToken(String username, String authToken);
+    Boolean existsUserToken(String username, String authToken);
 
-    boolean delIfExistsUserSession(String username);
+    void delIfExistsUserSession(String username);
 
-    int saveToken(LoginToken token);
+    void saveToken(LoginToken token);
 }
